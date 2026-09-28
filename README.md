@@ -12,7 +12,7 @@ Requer Python 3.10+.
 1. **Inicie os Servidores (MCP e Agente):**
    Abra o **primeiro terminal** e execute o script abaixo. Ele fará o setup das dependências, gerará o secret (se necessário) e subirá o MCP e o Agente em background no mesmo terminal.
    ```bash
-   ./start_servers.sh
+   python3 start_servers.py
    ```
    *(Pressione `CTRL+C` a qualquer momento nesse terminal para derrubar ambos os servidores)*
 
