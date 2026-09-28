@@ -9,15 +9,21 @@ Este repositório contém a solução do desafio de construção de um Servidor 
 A partir de um clone limpo do repositório, execute os passos abaixo. 
 Requer Python 3.10+.
 
-1. **Inicie os Servidores (MCP e Agente):**
-   Abra o **primeiro terminal** e execute o script abaixo. Ele fará o setup das dependências, gerará o secret (se necessário) e subirá o MCP e o Agente em background no mesmo terminal.
+1. **Inicie o Servidor MCP:**
+   Abra um **primeiro terminal**. Este script instala dependências, cria o `.env` gerando o `REQUEST_STATE_SECRET` automaticamente e sobe o servidor:
    ```bash
-   python3 start_servers.py
+   ./start_mcp.sh
    ```
-   *(Pressione `CTRL+C` a qualquer momento nesse terminal para derrubar ambos os servidores)*
+   *(Deixe o stderr deste terminal visível para o validador)*
 
-2. **Execute o Validador:**
-   Abra um **segundo terminal** e execute:
+2. **Inicie o Agente A2A:**
+   Abra um **segundo terminal** e suba a ponte:
+   ```bash
+   ./start_agente.sh
+   ```
+
+3. **Execute o Validador:**
+   Abra um **terceiro terminal** e execute:
    ```bash
    python3 validador/validar.py --agente http://localhost:7300 --mcp http://localhost:7301
    ```
