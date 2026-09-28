@@ -9,7 +9,7 @@ Este repositório contém a solução do desafio de construção de um Servidor 
 A partir de um clone limpo do repositório, execute os passos abaixo. 
 Requer Python 3.10+.
 
-1. **Setup inicial:**
+1. **Setup inicial (apenas uma vez):**
    Este script instala as dependências necessárias e gera a variável `REQUEST_STATE_SECRET` automaticamente em um arquivo `.env`.
    ```bash
    ./setup.sh
