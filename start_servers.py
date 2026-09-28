@@ -3,10 +3,18 @@ import sys
 import time
 import secrets
 import subprocess
+import threading
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 ENV_FILE = BASE_DIR / ".env"
+
+def stream_logs(pipe, prefix):
+    """Lê linhas do pipe e imprime com o prefixo indicado"""
+    for line in iter(pipe.readline, b''):
+        # decodifica e imprime com prefixo sem pular duas linhas
+        sys.stdout.write(f"{prefix} {line.decode('utf-8', errors='replace')}")
+        sys.stdout.flush()
 
 def setup():
     print("======================================================")
@@ -39,16 +47,24 @@ def run_servers():
     env["PYTHONPATH"] = str(BASE_DIR / "servidor-mcp")
     mcp_proc = subprocess.Popen(
         [sys.executable, "-m", "uvicorn", "app:app", "--port", "7301", "--app-dir", "servidor-mcp"],
-        env=env
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT
     )
+    # Lança a thread para ler os logs do MCP
+    threading.Thread(target=stream_logs, args=(mcp_proc.stdout, "[MCP]   "), daemon=True).start()
 
     print("Iniciando Agente A2A (porta 7300)...")
     env_agente = env.copy()
     env_agente["PYTHONPATH"] = str(BASE_DIR)
     agente_proc = subprocess.Popen(
         [sys.executable, "-m", "uvicorn", "agente.app:app", "--port", "7300"],
-        env=env_agente
+        env=env_agente,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT
     )
+    # Lança a thread para ler os logs do Agente
+    threading.Thread(target=stream_logs, args=(agente_proc.stdout, "[AGENTE]"), daemon=True).start()
     
     print("======================================================")
     print("Ambos os processos estão rodando!")
