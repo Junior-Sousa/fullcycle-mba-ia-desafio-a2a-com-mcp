@@ -1,7 +1,7 @@
 import unittest
 import os
 from fastapi.testclient import TestClient
-from servidor_mcp.app import app
+from app import app
 
 class TestMCPServer(unittest.TestCase):
     def setUp(self):
@@ -10,7 +10,7 @@ class TestMCPServer(unittest.TestCase):
         os.environ.setdefault("REQUEST_STATE_SECRET", "0" * 64)  # 32 bytes hex
         # Load expected policy content
         from pathlib import Path
-        base_dir = Path(__file__).resolve().parents[2]
+        base_dir = Path(__file__).resolve().parents[1]
         self.policy_path = base_dir / "dados" / "politica-de-uso.md"
         self.policy_content = self.policy_path.read_text(encoding="utf-8")
 
