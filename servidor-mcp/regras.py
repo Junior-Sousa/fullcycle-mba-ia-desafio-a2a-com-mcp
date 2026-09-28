@@ -78,3 +78,47 @@ def obter_conflitos(
         if max(dt_inicio, res_inicio) < min(dt_fim, res_fim):
             conflitos.append(res)
     return conflitos
+
+
+def calcular_alternativas(
+    sala_solicitada_id: str, dt_inicio: datetime, dt_fim: datetime
+) -> List[str]:
+    """
+    Salas livres no intervalo, capacidade >= sala pedida,
+    ordenadas por capacidade asc e id asc, maximo 3.
+    """
+    sala_pedida = SALAS_POR_ID[sala_solicitada_id]
+    cap_minima = sala_pedida["capacidade"]
+
+    candidatas = []
+    for s in SALAS:
+        if s["id"] == sala_solicitada_id:
+            continue
+        if s["capacidade"] < cap_minima:
+            continue
+        # Checa se a sala candidata está livre no intervalo
+        if len(obter_conflitos(s["id"], dt_inicio, dt_fim)) == 0:
+            candidatas.append(s)
+
+    # Ordenação: capacidade crescente, depois id alfabético
+    candidatas.sort(key=lambda s: (s["capacidade"], s["id"]))
+
+    # Retorna apenas os IDs, no máximo 3
+    return [s["id"] for s in candidatas[:3]]
+
+
+def criar_reserva(
+    sala_id: str, inicio_str: str, fim_str: str, responsavel: str
+) -> Dict[str, Any]:
+    """Persiste uma nova reserva no estado em memória e retorna o objeto criado."""
+    global CONTADOR_RESERVA
+    nova_reserva = {
+        "id": f"res-{CONTADOR_RESERVA:04d}",
+        "sala": sala_id,
+        "inicio": inicio_str,
+        "fim": fim_str,
+        "responsavel": responsavel,
+    }
+    CONTADOR_RESERVA += 1
+    RESERVAS.append(nova_reserva)
+    return nova_reserva
