@@ -9,26 +9,22 @@ Este repositório contém a solução do desafio de construção de um Servidor 
 A partir de um clone limpo do repositório, execute os passos abaixo. 
 Requer Python 3.10+.
 
-1. **Instale as dependências:**
+1. **Setup inicial:**
+   Este script instala as dependências necessárias e gera a variável `REQUEST_STATE_SECRET` automaticamente em um arquivo `.env`.
    ```bash
-   pip install fastapi uvicorn httpx mcp pydantic
+   ./setup.sh
    ```
 
-2. **Gere o secret para proteção do estado e inicie o Servidor MCP:**
-   Abra o primeiro terminal e execute:
+2. **Inicie o Servidor MCP:**
+   Abra um terminal e execute:
    ```bash
-   # Gera um segredo de 32 bytes aleatórios e o exporta para a sessão
-   export REQUEST_STATE_SECRET=$(python3 -c "import secrets; print(secrets.token_hex(32))")
-   
-   # Inicia o servidor MCP na porta 7301
-   PYTHONPATH=servidor-mcp python3 -m uvicorn app:app --port 7301 --app-dir servidor-mcp
+   ./start_mcp.sh
    ```
 
 3. **Inicie o Agente A2A:**
-   Abra um segundo terminal e execute:
+   Abra um novo terminal e execute:
    ```bash
-   # Inicia o Agente A2A na porta 7300
-   PYTHONPATH=. python3 -m uvicorn agente.app:app --port 7300
+   ./start_agente.sh
    ```
 
 4. **Execute o Validador:**
