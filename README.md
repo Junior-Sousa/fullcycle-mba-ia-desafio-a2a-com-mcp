@@ -12,14 +12,14 @@ Requer Python 3.10+.
 1. **Inicie o Servidor MCP:**
    Abra um **primeiro terminal**. Este script instala dependências, cria o `.env` gerando o `REQUEST_STATE_SECRET` automaticamente e sobe o servidor:
    ```bash
-   ./start_mcp.sh
+   python3 start_mcp.py
    ```
    *(Deixe o stderr deste terminal visível para o validador)*
 
 2. **Inicie o Agente A2A:**
    Abra um **segundo terminal** e suba a ponte:
    ```bash
-   ./start_agente.sh
+   python3 start_agente.py
    ```
 
 3. **Execute o Validador:**
