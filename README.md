@@ -10,10 +10,11 @@ A partir de um clone limpo do repositório, execute os passos abaixo.
 Requer Python 3.10+.
 
 1. **Inicie o Servidor MCP:**
-   Abra um **primeiro terminal**. Este script instala dependências, cria o `.env` gerando o `REQUEST_STATE_SECRET` automaticamente e sobe o servidor:
+   Abra um **primeiro terminal**. Este script instala as dependências travadas a partir do `pyproject.toml` (também versionado com `uv.lock`), cria o `.env` gerando o `REQUEST_STATE_SECRET` automaticamente e sobe o servidor:
    ```bash
    python3 start_mcp.py
    ```
+   *(Caso prefira instalar previamente no seu ambiente virtual, execute `pip install .` ou `uv sync`).*
    *(Deixe o stderr deste terminal visível para o validador)*
 
 2. **Inicie o Agente A2A:**

@@ -7,11 +7,50 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 ENV_FILE = BASE_DIR / ".env"
 
+def get_dependencies_from_pyproject():
+    pyproject_path = BASE_DIR / "pyproject.toml"
+    if not pyproject_path.exists():
+        return []
+    try:
+        import tomllib
+        with open(pyproject_path, "rb") as f:
+            data = tomllib.load(f)
+        return data.get("project", {}).get("dependencies", [])
+    except ImportError:
+        import re
+        content = pyproject_path.read_text(encoding="utf-8")
+        deps = []
+        in_deps = False
+        for line in content.splitlines():
+            line = line.strip()
+            if line.startswith("dependencies = ["):
+                in_deps = True
+                continue
+            if in_deps:
+                if line.startswith("]"):
+                    break
+                m = re.search(r'["\']([^"\']+)["\']', line)
+                if m:
+                    deps.append(m.group(1))
+        return deps
+
+def install_dependencies():
+    print("Instalando/verificando dependências travadas a partir do pyproject.toml...")
+    try:
+        subprocess.check_call(
+            [sys.executable, "-m", "pip", "install", "-q", "."]
+        )
+    except subprocess.CalledProcessError:
+        deps = get_dependencies_from_pyproject()
+        if deps:
+            subprocess.check_call(
+                [sys.executable, "-m", "pip", "install", "-q", *deps]
+            )
+        else:
+            raise
+
 def main():
-    print("Instalando/verificando dependências...")
-    subprocess.check_call(
-        [sys.executable, "-m", "pip", "install", "-q", "fastapi", "uvicorn", "httpx", "mcp", "pydantic"]
-    )
+    install_dependencies()
 
     if not ENV_FILE.exists():
         secret = secrets.token_hex(32)
